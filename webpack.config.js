@@ -12,13 +12,12 @@ module.exports = {
   target,
   devtool,
   entry: {
-    main: path.resolve(__dirname, 'src', 'pages', 'main', 'index.js'),
-    pets: path.resolve(__dirname, 'src', 'pages', 'pets', 'index.js'),
+    main: path.resolve(__dirname, 'src', 'scripts', 'index.ts'),
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
+    filename: 'index.js',
     clean: true,
-    filename: 'js/[name].[contenthash].js'
   },
   module: {
     rules: [
@@ -27,29 +26,23 @@ module.exports = {
         loader: "html-loader",
       },
       {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
+      {
         test: /\.(c|sa|sc)ss$/i,
         use: [
           MiniCssExtractPlugin.loader,
           "css-loader",
           "sass-loader",],
       },
-      {
-        test: /\.m?js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['@babel/preset-env']
-            ]
-          }
-        }
-      },
+
       {
         test: /\.(woff|woff2)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/fonts/[name][ext]'
+          filename: ''
         }
       },
       {
@@ -85,24 +78,17 @@ module.exports = {
         }
       },
     ],
+   
   },
   plugins: [
     new HtmlWebpackPlugin(
       {
         filename: path.resolve(__dirname, 'dist', 'index.html'),
-        template: path.resolve(__dirname, 'src', 'pages', 'main', 'index.html'),
+        template: path.resolve(__dirname, 'src', 'index.html'),
         inject: 'body',
-        chunks: ['pages', 'main', 'index'],
       }
     ),
-    new HtmlWebpackPlugin(
-      {
-        filename: path.resolve(__dirname, 'dist', 'pets', 'index.html'),
-        template: path.resolve(__dirname, 'src', 'pages', 'pets', 'index.html'),
-        inject: 'body',
-        chunks: ['pages', 'pets', 'index']
-      }
-    ),
+
 
     new MiniCssExtractPlugin(
       {
